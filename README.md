@@ -64,8 +64,7 @@ The 'naive' computational approach to the n-body problem computes the gravitatio
 
 The central idea is grouping together bodies that are sufficiently close to each other and sufficiently far from the force calculation point, and approximating the group of bodies as one body with the total group mass located at the group center of mass. 'Sufficiently close' and 'sufficiently far' are defined by a simulation parameter called the multipole acceptance criterion (MAC), usually denoted by $\theta$, which is a ratio of the group 'diameter' $d$ and the distance $r$ between the force calculation point and the group center of mass. In the figure below, diagram *B* represents a Barnes-Hut approximation of diagram *A*.
 
-![MAC]
-(https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Barnes_hut.svg/376px-Barnes_hut.svg.png)
+![MAC](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Barnes_hut.svg/376px-Barnes_hut.svg.png)
 
 Generally, there is a tradeoff between accuracy and speedup. The lower the MAC, the more accurate but more expensive the computation, because only smaller groups (and hence a greater number of total groups) can be used in the approximation.
 
@@ -74,8 +73,7 @@ To find suitable sets of bodies to group together, a Quadtree data structure is 
 
 In calculating the force on a particular body, the bodies within a square are grouped together, and if approximating these bodies as a single body meets the MAC, the approximation is used.  Otherwise, the contributions from the four sub-squares are summed together.
 
-![Quadtree example]
-(https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQzciGQ-YBx_XnetitdFd6x4M91lmMTWbGym9O2U1FpTonfXsc4)
+![Quadtree example](https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQzciGQ-YBx_XnetitdFd6x4M91lmMTWbGym9O2U1FpTonfXsc4)
 
 For 3D data, there is the analogous octree data structure.
 
