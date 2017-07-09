@@ -1,8 +1,8 @@
-#CSE 6220 N-Body Problem (Barnes-Hut) -- OMP
+# CSE 6220 N-Body Problem (Barnes-Hut) -- OMP
 
 In this lab, you will implement a parallel version of the Barnes-Hut algorithm for solving n-body problems.  The efficiency of your code will be compared to a reference implementation to help determine your grade.
 
-##Getting Started
+## Getting Started
 
 Begin by obtaining the starter code from the github repository.
 
@@ -14,7 +14,7 @@ Note that this is the [GT github server](https:github.gatech.edu), so you will n
 
 Optionally, you may choose use a git hosting service for your code.  As always, please **do not make your repository public** on Github or another git hosting service.  Anyone will be able to see it.  If you feel the need to use a hosting service for your project, please keep your repository private.  Your GT account allows you to create free private repositories on [the GT github server](https:github.gatech.edu).
 
-##Part 1: Barnes-Hut Approximation for the N-Body Problem
+## Part 1: Barnes-Hut Approximation for the N-Body Problem
 In classical mechanics, the [n-body problem](https://en.wikipedia.org/wiki/N-body_problem) consists of predicting the motion of celestial objects interacting through gravity.  That is, given the instantaneous positions and velocities of a group of objects at a given time, predict the gravitational forces and use these to predict the position and velocities for all future times.  
 
 In a computational approach to making these predictions, the forces at a given time are calculated, and then numerical integration is used to predict the positions and velocities a short time in the future.  Repeating this process makes it possible to generate accurate predictions for celestial motion far into the future even when closed-form solutions are not possible.
@@ -69,7 +69,7 @@ The central idea is grouping together bodies that are sufficiently close to each
 
 Generally, there is a tradeoff between accuracy and speedup. The lower the MAC, the more accurate but more expensive the computation, because only smaller groups (and hence a greater number of total groups) can be used in the approximation.
 
-####Quadtrees
+#### Quadtrees
 To find suitable sets of bodies to group together, a Quadtree data structure is used.  This approach recursively divides square regions of $R^2$ into 4 equal sub-squares.  Thus, the root node corresponds to a square region encompassing all of the bodies and it's children correspond to the four sub-squares of equal size.  Squares with no bodies in them are pruned from the tree. 
 
 In calculating the force on a particular body, the bodies within a square are grouped together, and if approximating these bodies as a single body meets the MAC, the approximation is used.  Otherwise, the contributions from the four sub-squares are summed together.
@@ -79,12 +79,12 @@ In calculating the force on a particular body, the bodies within a square are gr
 
 For 3D data, there is the analogous octree data structure.
 
-####Deliverables
+#### Deliverables
 Your task for this part of the lab is to implement the Barnes-Hut approximation with a quadtree in the files *ForceBarnesHut.hh* and *ForceBarnesHut.cc.*  Your ForceBarnesHut class should inherit from ForceCalculator and define the operator () so that it can be used in place of the ForceNaive class.  You should construct the quadtree in the constructor and then use it to quickly compute the forces in the () operator member function.  The MAC parameter is specified as the variable $\theta$ to the constructor.
 
 Copy-paste your code into the Udacity site at [https://www.udacity.com/course/viewer#!/c-ud281/l-4989478591/m-5034784177](https://www.udacity.com/course/viewer#!/c-ud281/l-4989478591/m-5034784177).  The TAs will evaluate the performance of you code after the submission deadline.
 
-##Part 2: Parallel Barnes-Hut
+## Part 2: Parallel Barnes-Hut
 What could be faster than the Barnes-Hut approximation?  A parallel version, of course!  And, indeed, creating a parallel implementation of the Barnes-Hut algorithm is the next part of the lab.
 
 Given the quadtree, parallelizing the force calculation is a simple parallel loop.  Parallelizing the construction of the tree, however, is a little more challenging.  At first, the tree construction may seem like a curious thing to optimize.  In the N-body simulations that you will have done, the dominant part of the computation was the computation of the forces *after* the construction of the tree.  As the number of bodies grows, however, the share of computational time due to the construction increases.  In addition, for other applications it may be important to compute the gravitational effect of a large number of bodies, not on each other, but on a smaller set of bodies, perhaps even in real-time.  The real-time nature of the problem makes a fast Barnes-Hut approximation necessary, and it would be nice to compute the quadtree quickly so as to be sure to have the tree ready when needed.
@@ -113,7 +113,7 @@ We can discover the Morton order by forming Morton 'keys' associated with each p
 After sorting the Morton keys, the points (quadtree leaves) are in the order they would appear in the quadtree.
 
 
-####Deliverables
+#### Deliverables
 Using the ideas above, complete the implementation of the MortonKeyCalculator class in the files **MortonKeyCalculator.cc** and **MortonKeyCalculator.hh**.  You should make your implementation parallel.  Thankfully, gcc makes this easy with its builtin [parallel mode](https://gcc.gnu.org/onlinedocs/libstdc++/manual/parallel_mode_using.html).  You should use the method of "Using Specific Parallel Components."  The main file mortonsort.cc may be useful for debugging.
 
 Copy-paste your code into the Udacity site at [https://www.udacity.com/course/viewer#!/c-ud281/l-4989478591/m-5071434974](https://www.udacity.com/course/viewer#!/c-ud281/l-4989478591/m-5071434974).  The TAs will evaluate the performance of your code after the submission deadline.
